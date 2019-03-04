@@ -27,6 +27,7 @@ router.beforeEach((to,from,next)=>{
 
 })
 /* eslint-disable no-new */
+//添加一行注释111
 new Vue({
   el: '#app',
   router,
