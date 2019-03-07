@@ -46,7 +46,7 @@
             label="车辆状态"
             width="auto">
             <template slot-scope="scope">
-              {{scope.row.state==1?'承运中':'空闲'}}
+              <el-tag type="primary">{{scope.row.state==1?'承运中':'空闲'}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
