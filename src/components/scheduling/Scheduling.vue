@@ -193,7 +193,7 @@
             label="备注">
           </el-table-column>
           <el-table-column
-            prop="receivedate"
+            prop="checkintime"
             width="150"
             label="调度时间">
           </el-table-column>
