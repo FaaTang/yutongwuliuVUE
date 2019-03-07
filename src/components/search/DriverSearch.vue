@@ -81,7 +81,8 @@
             style="display: flex;justify-content: flex-end;margin-right: 10px"
             layout="sizes,prev,pager,next,jumper,->,total,slot"
             :total="total">
-          </el-pagination></div>
+          </el-pagination>
+        </div>
     </div>
 
     </div>
@@ -94,7 +95,7 @@
           return{
             currentPage:1,
             pageSize:5,
-            total:'',
+            total:0,
             capaTrucks:[],
             loading:true,
           }
