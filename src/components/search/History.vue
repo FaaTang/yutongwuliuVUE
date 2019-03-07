@@ -112,7 +112,7 @@
             width="150"
             label="录入时间">
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <!--<el-table-column label="操作" width="150" fixed="right">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -124,12 +124,12 @@
                 @click="handleDelete(scope.$index, scope.row)">删除
               </el-button>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </div>
       <div>
         <el-pagination
-          @current-change="currentChange"
+          @current-change="currentChange	"
           @size-change="sizeChange"
           :current-page="currentPage"
           :page-size="pageSize"
@@ -148,7 +148,7 @@
       data(){
           return{
             carriers:[],
-            total:1,
+            total:0,
             loading:true,
             pageSize:5,
             currentPage:1,
