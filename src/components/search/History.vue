@@ -1,7 +1,7 @@
 <template>
     <div>
       <div></div>
-      <div style="margin-top: 10px">
+      <div style="margin-top: 20px">
         <el-table
           :data="carriers"
           stripe
@@ -81,26 +81,30 @@
             label="运费">
           </el-table-column>
           <el-table-column
-            prop="oilcost"
-            width="150"
-            label="油费">
-          </el-table-column>
-          <el-table-column
-            prop="toll"
-            width="150"
-            label="过桥费">
-          </el-table-column>
-          <el-table-column
-            prop="fine"
-            width="150"
-            label="罚款">
-          </el-table-column>
-          <el-table-column
             prop="othercost"
             label="其他费用">
           </el-table-column>
           <el-table-column
-            prop="totalcost"
+            prop="scheduling.oilcost"
+            width="150"
+            label="油费">
+          </el-table-column>
+          <el-table-column
+            prop="scheduling.toll"
+            width="150"
+            label="过桥费">
+          </el-table-column>
+          <el-table-column
+            prop="scheduling.fine"
+            width="150"
+            label="罚款">
+          </el-table-column>
+          <el-table-column
+            prop="scheduling.othercost"
+            label="其他调度费用">
+          </el-table-column>
+          <el-table-column
+            prop="scheduling.totalcost"
             label="合计费用">
           </el-table-column>
           <el-table-column
