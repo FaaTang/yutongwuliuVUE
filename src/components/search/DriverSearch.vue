@@ -46,7 +46,7 @@
             label="车辆状态"
             width="auto">
             <template slot-scope="scope">
-              {{scope.row.state==1?'承运中':'空闲'}}
+              <el-tag type="primary">{{scope.row.state==1?'承运中':'空闲'}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -81,7 +81,8 @@
             style="display: flex;justify-content: flex-end;margin-right: 10px"
             layout="sizes,prev,pager,next,jumper,->,total,slot"
             :total="total">
-          </el-pagination></div>
+          </el-pagination>
+        </div>
     </div>
 
     </div>
@@ -94,7 +95,7 @@
           return{
             currentPage:1,
             pageSize:5,
-            total:'',
+            total:0,
             capaTrucks:[],
             loading:true,
           }

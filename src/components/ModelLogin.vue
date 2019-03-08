@@ -39,7 +39,7 @@
       :visible.sync="registerdialog"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      :show-close="false"
+
       width="50%">
       <div>
         <el-form :model="user" status-icon :rules="rules" ref="user" label-width="100px" class="demo-ruleForm">
@@ -102,8 +102,16 @@
         var validateAccount = (rule, value, callback) => {
           if (!value) {
             callback(new Error('请输入账号'));
+          } else {
+            this.getRequest("/account?account="+value).then(resp=>{
+              if (resp == 1) {
+                callback(new error("账号已存在"));
+              } else {
+                callback();
+              }
+            })
           }
-          callback()
+          //callback();
         };
         var validatePass = (rule, value, callback) => {
           if (value === '') {

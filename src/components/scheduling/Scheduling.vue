@@ -126,6 +126,38 @@
             value-format="yyyy-MM-dd HH:mm"
             placeholder="选择出发时间">
           </el-date-picker>
+          <table>
+            <tr>
+              <td>油费</td>
+              <td>
+                <el-input v-model="oilcost"></el-input>
+              </td>
+            </tr>
+            <tr>
+              <td>过桥费</td>
+              <td>
+                <el-input v-model="toll"></el-input>
+              </td>
+            </tr>
+            <tr>
+              <td>罚款</td>
+              <td>
+                <el-input v-model="fine"></el-input>
+              </td>
+            </tr>
+            <tr>
+              <td>其他费用</td>
+              <td>
+                <el-input v-model="othercost"></el-input>
+              </td>
+            </tr>
+            <tr>
+              <td>合计成本</td>
+              <td>
+                <el-input v-model="totalcost"></el-input>
+              </td>
+            </tr>
+          </table>
           <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="sche">确 定</el-button>
@@ -166,7 +198,7 @@
           <el-table-column
             prop="oilcost"
             width="150"
-            label="邮费">
+            label="油费">
           </el-table-column>
           <el-table-column
             prop="toll"
@@ -193,7 +225,7 @@
             label="备注">
           </el-table-column>
           <el-table-column
-            prop="receivedate"
+            prop="checkintime"
             width="150"
             label="调度时间">
           </el-table-column>
@@ -211,6 +243,11 @@
         name: "Scheduling",
       data(){
         return{
+          oilcost:null,
+          toll:null,
+          fine:null,
+          othercost:null,
+          totalcost:null,
           sches:[],
           startTime:null,
           rowB:[],
@@ -237,7 +274,7 @@
           })
         },
         sche() {
-          this.postKeyValueRequest("/sche/",{carriersid:this.rowB.carriersid,truckid:this.truckid,startTime:this.startTime}).then(resp=>{
+          this.postKeyValueRequest("/sche/",{carriersid:this.rowB.carriersid,truckid:this.truckid,startTime:this.startTime,oilcost:this.oilcost,toll:this.toll,fine:this.fine,othercost:this.othercost,totalcost:this.totalcost}).then(resp=>{
             if (resp) {
               this.initCarriers()
               this.initSches();
