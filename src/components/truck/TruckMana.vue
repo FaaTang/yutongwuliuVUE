@@ -84,23 +84,24 @@
           width="200px"
         >
           <template slot-scope="scope">
-            <el-button type="info" @click="updateTruck(scope.$index, scope.row)" size="mini" icon="el-icon-edit">修改</el-button>
+            <el-button type="info" @click="updateTruck(scope.$index, scope.row)" size="mini" icon="el-icon-edit">修改
+            </el-button>
             <el-button type="danger" @click="deleteTruck(scope)" size="mini" icon="el-icon-delete">删除</el-button>
           </template>
 
         </el-table-column>
       </el-table>
       <div>
-      <el-pagination
-        @current-change="currentChange	"
-        @size-change="sizeChange"
-        :current-page="currentPage"
-        :page-size="pageSize"
-        :page-sizes="[5,10,15,20]"
-        style="display: flex;justify-content: flex-end;margin-right: 10px"
-        layout="sizes,prev,pager,next,jumper,->,total,slot"
-        :total="total">
-      </el-pagination>
+        <el-pagination
+          @current-change="currentChange	"
+          @size-change="sizeChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          :page-sizes="[5,10,15,20]"
+          style="display: flex;justify-content: flex-end;margin-right: 10px"
+          layout="sizes,prev,pager,next,jumper,->,total,slot"
+          :total="total">
+        </el-pagination>
       </div>
     </div>
     <el-dialog
@@ -169,7 +170,7 @@
               <el-tag>车辆状态</el-tag>
             </td>
             <td>
-            <el-radio-group v-model="truck.state">
+              <el-radio-group v-model="truck.state">
                 <el-radio :label="1">承运中</el-radio>
                 <el-radio :label="2">空闲</el-radio>
               </el-radio-group>
@@ -216,18 +217,19 @@
     name: "TruckMana",
     data() {
       return {
-        teams:[],
+        teams: [],
+        numbers:[],
         dialogVisible: false,
         loading: true,
         dialogtitle: '',
         dialogTruck: '',
-        daterange:null,
-        trucktype:'全部',
-        types:[],
+        daterange: null,
+        trucktype: '全部',
+        types: [],
         trucks: [],
-        total:0,
-        pageSize:5,
-        currentPage:1,
+        total: 0,
+        pageSize: 5,
+        currentPage: 1,
 
         truck: {
           truckid: '',
@@ -251,104 +253,131 @@
       this.initTruckTeams();
     },
     methods: {
-      initTruckTeams(){
-        this.getRequest("/truck/team/").then(resp=>{
-          this.teams=resp.data;
-        })
-      },
-      currentChange(val){
-        this.currentPage=val;
-        this.initTrucks();
-      },
-      sizeChange(val){
-        this.pageSize=val;
-        this.initTrucks();
-
-      },
-      initTypes(){
-        this.getRequest("/truck/types").then(resp=>{
-          if (resp){
-            this.types=resp;
+      initTruck(){
+        this.getRequest("/truck/numbers").then(resp=>{
+          if(resp){
+            this.numbers=resp.data;
           }
         })
       },
-      initTrucks() {
-        let url= "/truck/?type="+this.trucktype+"&size="+this.pageSize+"&page="+this.currentPage;
-        if (this.daterange){
-          url+="&daterange="+this.daterange[0]+"&daterange="+this.daterange[1];
-        }
-        this.getRequest(url).then(resp => {
-          this.loading = false;
-          if (resp) {
-            this.total = resp.total;
-            this.trucks = resp.data;
+  initTruckTeams()
+  {
+    this.getRequest("/truck/team/").then(resp => {
+      this.teams = resp.data;
+    })
+  }
+  ,
+  currentChange(val)
+  {
+    this.currentPage = val;
+    this.initTrucks();
+  }
+  ,
+  sizeChange(val)
+  {
+    this.pageSize = val;
+    this.initTrucks();
 
-          }
-        })
-      },
-      showAddView() {
-        this.truck = {
-          truckid: '',
-          number: '',
-          buydate: null,
-          type: '',
-          length: '',
-          tonnage: null,
-          fkTeamid: null,
-          state: -1,
-          remark: '',
-          checkintime: null,
-          isdelete: -1,
-          altertime: null
-        }
-        this.dialogtitle = '添加车辆信息';
-        this.dialogVisible = true;
-
-      },
-      updateTruck(index,row) {
-        this.dialogtitle = '修改车辆信息';
-        this.dialogVisible = true;
-        this.truck = row;
-      },
-      addTruck() {
-        if (this.truck.truckid) {
-          //更新
-          this.putRequest("/truck/update", this.truck).then(resp => {
-            this.initTrucks();
-            this.dialogVisible = false;
-          })
-        } else {
-          this.postRequest("/truck/", this.truck).then(resp => {
-            if (resp) {
-              this.dialogVisible = false;
-              this.initTrucks();
-
-            }
-          })
-        }
-
-      },
-      deleteTruck(v) {
-        this.$confirm('此操作将永久删除编号为【'+v.row.truckid+'】的车辆信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let truckid = v.row.truckid;
-          this.getRequest("/truck/deleteById?truckid=" + truckid).then(resp => {
-            if (resp) {
-              this.initTrucks();
-            }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
-
+  }
+  ,
+  initTypes()
+  {
+    this.getRequest("/truck/types").then(resp => {
+      if (resp) {
+        this.types = resp;
+      }
+    })
+  }
+  ,
+  initTrucks()
+  {
+    let url = "/truck/?type=" + this.trucktype + "&size=" + this.pageSize + "&page=" + this.currentPage;
+    if (this.daterange) {
+      url += "&daterange=" + this.daterange[0] + "&daterange=" + this.daterange[1];
     }
+    this.getRequest(url).then(resp => {
+      this.loading = false;
+      if (resp) {
+        this.total = resp.total;
+        this.trucks = resp.data;
+
+      }
+    })
+  }
+  ,
+  showAddView()
+  {
+    this.truck = {
+      truckid: '',
+      number: '',
+      buydate: null,
+      type: '',
+      length: '',
+      tonnage: null,
+      fkTeamid: null,
+      state: -1,
+      remark: '',
+      checkintime: null,
+      isdelete: -1,
+      altertime: null
+    }
+    this.dialogtitle = '添加车辆信息';
+    this.dialogVisible = true;
+
+  }
+  ,
+  updateTruck(index, row)
+  {
+    this.dialogtitle = '修改车辆信息';
+    this.dialogVisible = true;
+    this.truck = row;
+  }
+  ,
+  addTruck()
+  {
+    if (this.truck.truckid) {
+      //更新
+      this.putRequest("/truck/update", this.truck).then(resp => {
+        this.initTrucks();
+        this.dialogVisible = false;
+      })
+    } else {
+      this.postRequest("/truck/", this.truck).then(resp => {
+        if (resp) {
+          this.dialogVisible = false;
+          this.initTrucks();
+
+        }
+      })
+    }
+
+  }
+  ,
+  deleteTruck(v)
+  {
+    this.$confirm('此操作将永久删除编号为【' + v.row.truckid + '】的车辆信息, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      let truckid = v.row.truckid;
+      this.getRequest("/truck/deleteById?truckid=" + truckid).then(resp => {
+        if (resp) {
+          this.initTrucks();
+        }
+      })
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消删除'
+      });
+    });
+
+  }
+  ,
+
+
+  }
   }
 </script>
 
