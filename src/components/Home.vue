@@ -20,7 +20,7 @@
           </el-dropdown>
         </div>
       </el-header>
-      <el-container style="height: 10801111px">
+      <el-container style="height: 1080px">
         <el-aside width="200px">
           <el-menu :unique-opened="true" router background-color="#009966" style="height: 100%">
             <el-submenu :index="index+''" v-for="(item,index) in this.$router.options.routes" :key="index"
