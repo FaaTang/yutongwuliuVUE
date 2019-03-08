@@ -50,7 +50,8 @@
               <el-tag v-else-if="scope.row.fkRoleid==2" type="warning" class="el-icon-star-on">调度部</el-tag>
               <el-tag v-else-if="scope.row.fkRoleid==3" type="warning" class="el-icon-star-on">财务部</el-tag>
               <el-tag v-else-if="scope.row.fkRoleid==4" type="warning" class="el-icon-star-on">运输部</el-tag>
-              <el-tag v-else style="color: #bf00ff" class="el-icon-star-on">超&nbsp;&nbsp;&nbsp;&nbsp;管</el-tag>
+              <el-tag v-else-if="scope.row.fkRoleid==5" style="color: #bf00ff" class="el-icon-star-on">超&nbsp;&nbsp;&nbsp;&nbsp;管</el-tag>
+              <el-tag v-else type="info"  class="el-icon-warning">  未授权</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -59,11 +60,21 @@
             width="120">
 
           </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="操作"
+            width="200px"
+          >
+            <template slot-scope="scope">
+              <el-button type="info" @click="authorizeUser(scope.row)" size="mini" icon="el-icon-check">授权</el-button>
+              <el-button type="danger" @click="updateUser(scope.row)" size="mini" icon="el-icon-edit">修改</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div style="margin-top: 20px">
           <el-button @click="toggleSelection([userData[1], userData[2]])">切换第二、第三行的选中状态</el-button>
           <el-button @click="toggleSelection()">取消选择</el-button>
-          <el-button @click="toggleSelection()">取消选择</el-button>
+          <el-button @click="deleteById">删除已选</el-button>
         </div>
         <div>
           <el-pagination
@@ -95,9 +106,17 @@
         }
       },
       mounted() {
+          //项目启动时自动执行
         this.initUserData();
       },
       methods: {
+        updateUser(row) {
+          //更新方法
+        },
+        authorizeUser(row) {
+          //授权方法
+          this.putRequest("/user/authorize/"+row.userid).then()
+        },
 /*        selectRow(selection,row) {
           while (row.userid) {
             this.deleteRequest("/user/"+row.userid).then(resp=>{
@@ -117,31 +136,39 @@
             this.$refs.multipleTable.clearSelection();
           }
         },
-        handleSelectionChange(val2) {
-          console.log(val2);
-          this.multipleSelection = val2;
+        handleSelectionChange(val) {
+          //勾选发生变化时重新赋值
+          this.multipleSelection = val;
 
         },
         deleteById() {
-          this.postRequest("/user/abc",this.multipleSelection).then()
+          //delete已选
+          this.postRequest("/user/",this.multipleSelection).then(resp=>{
+            if (resp) {
+              this.initUserData();
+            }
+          })
         },
         initUserData() {
-            this.getRequest("/user/").then(resp=>{
+          //初始化查询参数
+          let url = "/user/?page=" + this.currentPage + "&size=" + this.pageSize;
+            this.getRequest(url).then(resp=>{
               if (resp) {
                 this.userData = resp.data;
-                console.log(resp.data)
                 this.total = resp.total;
                 this.loading = false;
               }
             })
         },
         sizeChange(val){
+          //每页记录数改变
           this.pageSize = val;
-          this.loading = false;
+          this.initUserData();
         },
         currentChange(val) {
+          //当前页码改变
           this.currentPage = val;
-          this.loading = false;
+          this.initUserData();
         }
       }
     }
