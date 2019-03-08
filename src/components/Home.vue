@@ -2,9 +2,9 @@
 <template>
   <div>
     <el-container>
-      <el-header style="background-color: #c9c9c9;display: flex;justify-content: space-between;align-items: center;">
+      <el-header style="background-color:#009966;display: flex;justify-content: space-between;align-items: center;">
         <div style="font-family: 华文行楷;font-size: 30px;">
-          粤通物流管理系统
+           中国邮政
         </div>
         <div>
           <el-dropdown style="cursor: pointer;" @command="command">
@@ -20,9 +20,9 @@
           </el-dropdown>
         </div>
       </el-header>
-      <el-container>
+      <el-container style="height: 10801111px">
         <el-aside width="200px">
-          <el-menu :unique-opened="true" router>
+          <el-menu :unique-opened="true" router background-color="#009966" style="height: 100%">
             <el-submenu :index="index+''" v-for="(item,index) in this.$router.options.routes" :key="index"
                         v-if="!item.hidden && item.meta.role.indexOf(user.role.rolename)!=-1">
               <template slot="title">

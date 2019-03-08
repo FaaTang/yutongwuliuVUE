@@ -31,7 +31,7 @@
           <el-table-column
             label="性别">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.sex==1" style="color: #0072ff">先生</el-tag>
+              <el-tag v-if="scope.row.sex==1" style="color: rgba(0,155,103,0.61)">先生</el-tag>
               <el-tag v-else style="color: #ff96de">女士</el-tag>
             </template>
           </el-table-column>
@@ -46,11 +46,11 @@
           <el-table-column
             label="所属部门">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.fkRoleid==1" type="warning" class="el-icon-star-on">承运部</el-tag>
-              <el-tag v-else-if="scope.row.fkRoleid==2" type="warning" class="el-icon-star-on">调度部</el-tag>
-              <el-tag v-else-if="scope.row.fkRoleid==3" type="warning" class="el-icon-star-on">财务部</el-tag>
-              <el-tag v-else-if="scope.row.fkRoleid==4" type="warning" class="el-icon-star-on">运输部</el-tag>
-              <el-tag v-else-if="scope.row.fkRoleid==5" style="color: #bf00ff" class="el-icon-star-on">超&nbsp;&nbsp;&nbsp;&nbsp;管</el-tag>
+              <el-tag v-if="scope.row.fkRoleid==1" style="background-color: #c8c9cc;color: #ffffff" class="el-icon-star-on">承运部</el-tag>
+              <el-tag v-else-if="scope.row.fkRoleid==2" style="background-color: #c8c9cc;color: #ffffff" class="el-icon-star-on">调度部</el-tag>
+              <el-tag v-else-if="scope.row.fkRoleid==3" style="background-color: #c8c9cc;color: #ffffff" class="el-icon-star-on">财务部</el-tag>
+              <el-tag v-else-if="scope.row.fkRoleid==4" style="background-color: #c8c9cc;color: #ffffff" class="el-icon-star-on">运输部</el-tag>
+              <el-tag v-else-if="scope.row.fkRoleid==5" style="color: #009966" class="el-icon-star-on">超&nbsp;&nbsp;&nbsp;&nbsp;管</el-tag>
               <el-tag v-else type="info"  class="el-icon-warning">  未授权</el-tag>
             </template>
           </el-table-column>
@@ -66,15 +66,17 @@
             width="200px"
           >
             <template slot-scope="scope">
-              <el-button type="info" @click="authorizeUser(scope.row)" size="mini" icon="el-icon-check">授权</el-button>
-              <el-button type="danger" @click="updateUser(scope.row)" size="mini" icon="el-icon-edit">修改</el-button>
+              <el-button type="info" @click="authorizeUser(scope.row)" size="small" icon="el-icon-check" disabled v-if="scope.row.fkRoleid <=5">授权</el-button>
+              <el-button type="info" @click="authorizeUser(scope.row)" size="small" icon="el-icon-check" v-else>授权</el-button>
+              <el-button style="background-color: rgba(0,153,102,0.98);color: rgba(255,255,255,0.98)" @click="ShowUpdateView(scope.row)" size="small" icon="el-icon-edit">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
         <div style="margin-top: 20px">
-          <el-button @click="toggleSelection([userData[1], userData[2]])">切换第二、第三行的选中状态</el-button>
-          <el-button @click="toggleSelection()">取消选择</el-button>
-          <el-button @click="deleteById">删除已选</el-button>
+          <el-button @click="toggleSelection(userData)" class="el-icon-success" style="color: #009966">&nbsp;&nbsp;全选</el-button>
+          <el-button @click="toggleSelection()" class="el-icon-error" >&nbsp;&nbsp;取消选择</el-button>
+          <el-button @click="deleteById" class="el-icon-warning" style="color: #009966">&nbsp;&nbsp;删除已选</el-button>
+          <el-button @click="authorizeUserBatch" class="el-icon-info" >&nbsp;&nbsp;全部授权</el-button>
         </div>
         <div>
           <el-pagination
@@ -82,12 +84,99 @@
             @size-change="sizeChange"
             :current-page="currentPage"
             :page-size="pageSize"
-            :page-sizes="[5,10,15,20]"
+            :page-sizes="[25,50,75,100]"
             style="display: flex;justify-content: flex-end;margin-right: 10px"
             layout="sizes,prev,pager,next,jumper,->,total,slot"
             :total="total">
           </el-pagination>
         </div>
+        <el-dialog
+          title="修改用户信息"
+          :visible.sync="dialogUser"
+          width="30%">
+          <table>
+            <tr>
+              <td>
+                <el-tag>用户编号</el-tag>
+              </td>
+              <td>
+                <el-input v-model="userDataOne.userid" :disabled="true"></el-input>
+              </td>
+              <!--<td>
+                <el-tag>昵称</el-tag>
+              </td>
+              <td>
+                <el-date-picker
+                  v-model="truck.buydate"
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </td>-->
+            </tr>
+            <tr>
+              <td>
+                <el-tag>昵称</el-tag>
+              </td>
+              <td>
+                <el-input v-model="userDataOne.username" ></el-input>
+              </td>
+              <td>
+                <el-tag>性别</el-tag>
+              </td>
+              <td>
+                <!--<el-input v-if="userDataOne.sex==1" :disabled="true">男</el-input>
+                <el-input v-else :disabled="true">女</el-input>-->
+                <el-radio-group v-model="userDataOne.sex" :disabled="true">
+                  <el-radio :label="1">先生</el-radio>
+                  <el-radio :label="0">女士</el-radio>
+                </el-radio-group>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <el-tag>账号</el-tag>
+              </td>
+              <td>
+                <el-input v-model="userDataOne.account" :disabled="true"></el-input>
+              </td>
+              <td>
+                <el-tag>手机号码</el-tag>
+              </td>
+              <td>
+                <el-input v-model="userDataOne.phone"></el-input>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <el-tag>所属部门</el-tag>
+              </td>
+              <td>
+                <el-select v-model="value" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </td>
+              <td>
+                <el-tag>电子邮箱</el-tag>
+              </td>
+              <td>
+                <el-input v-model="userDataOne.email"></el-input>
+              </td>
+            </tr>
+
+          </table>
+          <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogUser = false">取 消</el-button>
+    <el-button type="primary" @click="updateUser">确 定</el-button>
+  </span>
+        </el-dialog>
+
       </div>
     </div>
 </template>
@@ -97,12 +186,44 @@
         name: "User",
       data() {
         return {
+          userDataOne: {
+            userid:null,
+            username:'',
+            sex:null,
+            account:'',
+            password:'',
+            phone:'',
+            email:'',
+            fkRoleid:null,
+            ckeckintime:null,
+            isdelete:-1,
+            altertime:'',
+            role:''
+          },
+          dialogUser: false,
           multipleSelection: [],
           userData:[],
           total:0,
-          pageSize:5,
+          pageSize:25,
           currentPage:1,
-          loading: true
+          loading: true,
+          options: [{
+            value: '1',
+            label: '承运部'
+          }, {
+            value: '2',
+            label: '调度部'
+          }, {
+            value: '3',
+            label: '财务人员'
+          }, {
+            value: '4',
+            label: '运输管理员'
+          }, {
+            value: '5',
+            label: '系统管理员'
+          }],
+          value: ''
         }
       },
       mounted() {
@@ -110,24 +231,36 @@
         this.initUserData();
       },
       methods: {
-        updateUser(row) {
+        authorizeUserBatch() {
+          //一键全部授权
+          this.getRequest("/user/authorizeUserBatch").then(resp=>{
+            if (resp) {
+              this.initUserData();
+            }
+          })
+        },
+        updateUser() {
+          this.putRequest("/user/updateUser",this.userDataOne).then(resp=>{
+            if (resp) {
+              this.initUserData();
+              this.dialogUser = false;
+            }
+          })
+        },
+        ShowUpdateView(row) {
           //更新方法
+          this.userDataOne = row;
+          this.dialogUser = true;
         },
         authorizeUser(row) {
-          //授权方法
-          this.putRequest("/user/authorize/"+row.userid).then()
+          //单个授权方法
+          this.putRequest("/user/authorize/"+row.userid).then(resp=>{
+            if (resp) {
+              this.initUserData();
+            }
+          })
         },
-/*        selectRow(selection,row) {
-          while (row.userid) {
-            this.deleteRequest("/user/"+row.userid).then(resp=>{
-              if (resp) {
-
-              }
-            })
-          }
-        },*/
         toggleSelection(rows) {
-          //console.log(rows)
           if (rows) {
             rows.forEach(row => {
               this.$refs.multipleTable.toggleRowSelection(row);
@@ -143,20 +276,37 @@
         },
         deleteById() {
           //delete已选
-          this.postRequest("/user/",this.multipleSelection).then(resp=>{
-            if (resp) {
-              this.initUserData();
-            }
-          })
+          this.$confirm('此操作将永久删除所选数据信息, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.postRequest("/user/",this.multipleSelection).then(resp=>{
+              if (resp) {
+                this.initUserData();
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+
         },
         initUserData() {
           //初始化查询参数
           let url = "/user/?page=" + this.currentPage + "&size=" + this.pageSize;
             this.getRequest(url).then(resp=>{
               if (resp) {
+
                 this.userData = resp.data;
                 this.total = resp.total;
                 this.loading = false;
+                /*if (this.userData.fkRoleid > 5) {
+                  console.log(this.userData.fkRoleid)
+                  this.disabled = false;
+                }*/
               }
             })
         },

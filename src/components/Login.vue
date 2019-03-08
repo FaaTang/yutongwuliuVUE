@@ -93,8 +93,17 @@
     var validateAccount = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入账号'));
+      }else {
+        this.getRequest("/account?account="+value).then(resp=>{
+          if (resp == 1) {
+
+            callback(new Error("账号已存在"));
+          } else {
+            callback();
+          }
+        })
       }
-      callback()
+      //callback()
     };
     var validatePass = (rule, value, callback) => {
       if (value === '') {
