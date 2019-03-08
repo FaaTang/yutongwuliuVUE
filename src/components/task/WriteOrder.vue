@@ -220,7 +220,7 @@
             width="150"
             label="录入时间">
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column label="操作" width="200px" fixed="right">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -326,6 +326,7 @@
 
       },
       handleEdit(index,row) {
+        this.carriers = row;
         this.dialogVisible = true;
         this.dialogtitle = "修改承运单";
 

@@ -34,7 +34,7 @@ axios.interceptors.response.use(data => {//{data:[],status:200}
 
   } else if (err.response.status == 401) {
     Message.error({message: err.response.data.msg});
-    this.router.replace("/")
+    router.replace("/")
   } else {
     if (err.response.data.msg) {
       Message.error({message: err.response.data.msg});

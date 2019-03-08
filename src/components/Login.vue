@@ -252,7 +252,6 @@
     },
     addUser(formName){
       this.$refs[formName].validate((valid) => {
-        console.log(this.user)
         if (valid) {
           this.postRequest("/register",this.user).then(data=>{
             this.registerdialog=false

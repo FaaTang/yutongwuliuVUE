@@ -2,6 +2,7 @@
     <div>
       <div></div>
       <div>
+        <div>
         <el-table
           ref="multipleTable"
           :data="userData"
@@ -72,6 +73,7 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
         <div style="margin-top: 20px">
           <el-button @click="toggleSelection(userData)" class="el-icon-success" style="color: #009966">&nbsp;&nbsp;全选</el-button>
           <el-button @click="toggleSelection()" class="el-icon-error" >&nbsp;&nbsp;取消选择</el-button>

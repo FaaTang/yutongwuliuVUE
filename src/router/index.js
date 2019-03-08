@@ -15,6 +15,7 @@ import Coststatistic from '@/components/cost/Coststatistic'
 import Log from '@/components/sys/Log'
 import Sys from '@/components/sys/Sys'
 import User from '@/components/sys/User'
+import UserInfo from '@/components/sys/UserInfo'
 
 Vue.use(Router)
 
@@ -29,8 +30,16 @@ export default new Router({
       path: '/home',
       name: 'Home',
       hidden: true,
-      component: Home
-    }, {
+      component: Home,
+      children:[
+        {
+          path: '/userInfo',
+          name: '用户中心',
+          hidden: true,
+          component: UserInfo,
+        }
+      ]
+    },  {
       path: '/home',
       name: '车辆管理',
       component: Home,
